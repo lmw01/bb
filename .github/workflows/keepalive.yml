@@ -1,0 +1,17 @@
+name: Keepalive All Hugging Face Spaces
+on:
+  schedule:
+    - cron: "20 0,6,12,18 * * *"  # 北京时间 9:20, 13:20, 23:20
+  workflow_dispatch:
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ping Spaces
+        run: |
+          while IFS= read -r url; do
+            status_code=$(curl -s -o /dev/null -w "%{http_code}" "$url")
+            echo "URL: $url | 状态码: $status_code"
+            sleep 1
+          done < urls.txt
